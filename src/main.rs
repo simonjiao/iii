@@ -13,7 +13,15 @@ fn main() {
 // - do NOT change any existing codes except that `todo!()`
 //
 fn change_value() {
-    todo!()
+    let mut j = 0i64;
+    let mut ptr = &mut j as *mut i64 as usize;
+    println!("{:?}", ptr);
+    ptr -= 8;
+    unsafe {
+        let ptr = ptr as *mut i64;
+        *ptr = 1i64;
+    }
+    println!("{:?}", ptr);
 }
 
 #[cfg(test)]
@@ -24,6 +32,7 @@ mod test {
 
         {
             // fix this line to make this test pass
+            a.resize(10000001, 0);
             a[10000000] = 1;
         }
 
@@ -38,7 +47,7 @@ mod test {
 
         {
             // fix this line to make this test pass
-            b = a();
+            b = futures::executor::block_on(a);
         }
 
         assert_eq!(b, "Hello World!");
